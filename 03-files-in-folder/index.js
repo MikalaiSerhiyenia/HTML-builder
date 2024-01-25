@@ -1,14 +1,15 @@
 const fs = require('fs/promises');
 const path = require('path');
 
-async function outputInformation() {
+const folderPath = path.join(__dirname, 'secret-folder');
+
+async function outputInformation(fp) {
   try {
-    const folderPath = path.join(__dirname, 'secret-folder');
-    const folderContent = await fs.readdir(folderPath, {
+    const folderContent = await fs.readdir(fp, {
       withFileTypes: true,
     });
     for (const item of folderContent) {
-      const filePath = path.join(folderPath, item.name);
+      const filePath = path.join(fp, item.name);
       if (item.isFile()) {
         const fileStats = await fs.stat(filePath);
         const fileName = path.parse(item.name).name;
@@ -20,8 +21,8 @@ async function outputInformation() {
       }
     }
   } catch (error) {
-    console.error(`Error: ${error.message}`);
+    console.error(`Error: ${error}`);
   }
 }
 
-outputInformation();
+outputInformation(folderPath);
